@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的导航</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header></header>
+    <main>
+        <div class="wrapper" id="mainContainer"></div>
+    </main>
+    <footer></footer>    
+    <script>
+        var keys={
+            '0':{0:'Q',1:'W',2:'E',3:'R',4:'T',5:'Y',6:'U',7:'I',8:'O',9:'P','length':10},
+            '1':{0:'A',1:'S',2:'D',3:'F',4:'G',5:'H',6:'J',7:'K',8:'L','length':9},
+            '2':{0:'Z',1:'X',2:'C',3:'V',4:'B',5:'N',6:'M','length':7},
+            'length':3
+        }
+        var  hash={
+            'Q':'qq.com',
+            'W':'weibo.com',
+            'E':'ele.me',
+            'R':'renren.com',
+            'T':'tianya.com',
+            'U':'uc.com',
+            'I':'iqiyi.com',
+            'P':undefined,
+            'A':'acfun.tv',
+            'S':'sohu.com',
+            'Z':'zhihu.com',
+            'M':'www.mcdonalds.com.cn'
+        }
+        var hashInfo=JSON.parse(localStorage.getItem("hashInfo")||'null');
+        if(hashInfo){
+            hash=hashInfo;
+        }
+        for(var i=0;i<keys['length'];i++){
+            var div=document.createElement("div");
+            div.setAttribute("row",i);
+            for(var j=0;j<keys[i]['length'];j++){
+                var kbd=document.createElement("kbd");
+                kbd.textContent=keys[i][j];
+                var button=document.createElement("button");
+                button.textContent="编辑";
+                button.id=kbd.textContent;
+                button.onclick=function(e){
+                  var key=e.target.id;
+                  var website=prompt('给我一个网址');
+                  if(null==website||""==website) return;
+                  hash[key]=website;
+                  localStorage.setItem("hashInfo",JSON.stringify(hash));
+                };
+                kbd.appendChild(button);
+                div.appendChild(kbd);
+            }
+            mainContainer.appendChild(div);
+        }
+       document.onkeypress=function(e){
+           var key=e['key'].toUpperCase();
+           var website=hash[key];
+           if(null==website) {alert("not supported;")};
+           window.open("http://"+website,"_blank");
+       };
+       
+        
+    </script>
+</body>
+</html>
