@@ -14,57 +14,102 @@
     </main>
     <footer></footer>    
     <script>
-        var keys={
-            '0':{0:'Q',1:'W',2:'E',3:'R',4:'T',5:'Y',6:'U',7:'I',8:'O',9:'P','length':10},
-            '1':{0:'A',1:'S',2:'D',3:'F',4:'G',5:'H',6:'J',7:'K',8:'L','length':9},
-            '2':{0:'Z',1:'X',2:'C',3:'V',4:'B',5:'N',6:'M','length':7},
-            'length':3
-        }
-        var  hash={
-            'Q':'qq.com',
-            'W':'weibo.com',
-            'E':'ele.me',
-            'R':'renren.com',
-            'T':'tianya.com',
-            'U':'uc.com',
-            'I':'iqiyi.com',
-            'P':undefined,
-            'A':'acfun.tv',
-            'S':'sohu.com',
-            'Z':'zhihu.com',
-            'M':'www.mcdonalds.com.cn'
-        }
-        var hashInfo=JSON.parse(localStorage.getItem("hashInfo")||'null');
-        if(hashInfo){
-            hash=hashInfo;
-        }
-        for(var i=0;i<keys['length'];i++){
-            var div=document.createElement("div");
-            div.setAttribute("row",i);
-            for(var j=0;j<keys[i]['length'];j++){
-                var kbd=document.createElement("kbd");
-                kbd.textContent=keys[i][j];
-                var button=document.createElement("button");
-                button.textContent="编辑";
-                button.id=kbd.textContent;
-                button.onclick=function(e){
-                  var key=e.target.id;
-                  var website=prompt('给我一个网址');
-                  if(null==website||""==website) return;
-                  hash[key]=website;
-                  localStorage.setItem("hashInfo",JSON.stringify(hash));
-                };
-                kbd.appendChild(button);
-                div.appendChild(kbd);
+        
+        var hashA=init();
+        var keys=hashA.keys;
+        var hash=hashA.hash;
+        
+        generateKeyboard(keys,hash);
+        listentoKeyboard(hash);
+
+        function init(){
+            var keys={
+                '0':{0:'Q',1:'W',2:'E',3:'R',4:'T',5:'Y',6:'U',7:'I',8:'O',9:'P','length':10},
+                '1':{0:'A',1:'S',2:'D',3:'F',4:'G',5:'H',6:'J',7:'K',8:'L','length':9},
+                '2':{0:'Z',1:'X',2:'C',3:'V',4:'B',5:'N',6:'M','length':7},
+                'length':3
             }
-            mainContainer.appendChild(div);
+            var  hash={
+                'Q':'qq.com',
+                'W':'weibo.com',
+                'E':'ele.me',
+                'R':'renren.com',
+                'T':'tianya.com',
+                'U':'uc.com',
+                'I':'iqiyi.com',
+                'P':undefined,
+                'A':'acfun.tv',
+                'S':'sohu.com',
+                'Z':'zhihu.com',
+                'M':'www.mcdonalds.com.cn'
+            }
+            var hashInfo=JSON.parse(localStorage.getItem("hashInfo")||'null');
+            if(hashInfo){
+                hash=hashInfo;
+            }
+            return {
+                keys:keys,
+                hash:hash
+            }
+
+
         }
-       document.onkeypress=function(e){
-           var key=e['key'].toUpperCase();
-           var website=hash[key];
-           if(null==website) {alert("not supported;")};
-           window.open("http://"+website,"_blank");
-       };
+
+        function tag(tagName,attributes){
+            var element=document.createElement(tagName);
+            for(var key in attributes){
+                element[key]=attributes[key];
+            }
+            return element;
+        }
+        function generateKeyboard(keys,hash){
+            for(var i=0;i<keys['length'];i++){
+                var div=tag("div",{className:'row'});
+                for(var j=0;j<keys[i]['length'];j++){
+                    var kbd=tag("kbd",{className:'key'});
+                    var span=tag("span",{textContent:keys[i][j]});
+                    var button=tag("button",{textContent:'编辑',id:keys[i][j]});
+                    button.onclick=function(e){
+                    var key=e.target.id;
+                    var website=prompt('给我一个网址');
+                    if(null==website||""==website) return;
+                    hash[key]=website;
+                    var brother=e.target.previousSibling;
+                    brother.src="http://"+website+"/favicon.ico";
+                    brother.onerror=function(e){
+                        e.target.src="../images/pic.ico";
+                    };
+                    localStorage.setItem("hashInfo",JSON.stringify(hash));
+                    };
+                    var img=tag("img",{src:'../images/pic.ico'});
+                    if(null!=keys[i][j] && null!=hash[keys[i][j]]){
+                        img.src="http://"+hash[keys[i][j]]+"/favicon.ico";
+                    }
+                    img.onerror=function(e){
+                        e.target.src="../images/pic.ico";
+                    };
+                    kbd.appendChild(span); 
+                    kbd.appendChild(img);
+                    kbd.appendChild(button);
+                    div.appendChild(kbd);
+                }
+                mainContainer.appendChild(div);
+            }
+
+        }
+
+        function listentoKeyboard(hash){
+            document.onkeypress=function(e){
+                var key=e['key'].toUpperCase();
+                var website=hash[key];
+                if(null==website) {alert("not supported;")};
+                window.open("http://"+website,"_blank");
+            };
+
+        }
+
+        
+      
        
         
     </script>
