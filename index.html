@@ -18,7 +18,7 @@
         var hashA=init();
         var keys=hashA.keys;
         var hash=hashA.hash;
-        
+
         generateKeyboard(keys,hash);
         listentoKeyboard(hash);
 
@@ -77,16 +77,16 @@
                     var brother=e.target.previousSibling;
                     brother.src="http://"+website+"/favicon.ico";
                     brother.onerror=function(e){
-                        e.target.src="../images/pic.ico";
+                        e.target.src="../images/pic.png";
                     };
                     localStorage.setItem("hashInfo",JSON.stringify(hash));
                     };
-                    var img=tag("img",{src:'../images/pic.ico'});
+                    var img=tag("img",{src:'../images/pic.png'});
                     if(null!=keys[i][j] && null!=hash[keys[i][j]]){
                         img.src="http://"+hash[keys[i][j]]+"/favicon.ico";
                     }
                     img.onerror=function(e){
-                        e.target.src="../images/pic.ico";
+                        e.target.src="../images/pic.png";
                     };
                     kbd.appendChild(span); 
                     kbd.appendChild(img);
